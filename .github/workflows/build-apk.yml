@@ -45,9 +45,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install buildozer cython==0.29.34
 
-      - name: Compilar APK
+      - name: Aceitar licencas Android
         run: |
-          buildozer android debug
+          mkdir -p "$HOME/.buildozer"
+          yes | buildozer android debug
 
       - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
