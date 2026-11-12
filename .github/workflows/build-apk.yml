@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Baixar código
+      - name: Baixar codigo
         uses: actions/checkout@v5
 
       - name: Configurar Python
@@ -19,14 +19,19 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Instalar dependências do sistema
+      - name: Configurar Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Instalar dependencias do sistema
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             git \
             zip \
             unzip \
-            openjdk-17-jdk \
             autoconf \
             automake \
             libtool \
@@ -38,17 +43,22 @@ jobs:
             libffi-dev \
             libssl-dev \
             gettext \
-            libltdl-dev
+            libltdl-dev \
+            lld
 
       - name: Instalar Buildozer
         run: |
           python -m pip install --upgrade pip
           python -m pip install buildozer cython==0.29.34
 
-      - name: Aceitar licencas Android
+      - name: Limpar compilacoes anteriores
         run: |
-          mkdir -p "$HOME/.buildozer"
-          yes | buildozer android debug
+          rm -rf .buildozer
+          rm -rf bin
+
+      - name: Compilar APK
+        run: |
+          yes | buildozer -v android debug
 
       - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
