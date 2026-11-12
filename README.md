@@ -1,0 +1,1 @@
+# Bipar_inventario
